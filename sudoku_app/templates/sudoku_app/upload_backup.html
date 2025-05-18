@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sudoku Solver - Upload</title>
+    {% load static %}
+    {% load grid_tags %}
+    <link rel="stylesheet" href="{% static 'sudoku_app/styles.css' %}">
+</head>
+<body>
+    <h1>Upload a Sudoku Image</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="upload" class="button upload-button">Upload</button>
+    </form>
+
+    {% if image_url %}
+        <h2>Uploaded Image</h2>
+        <img src="{{ image_url }}" alt="Uploaded Sudoku" style="max-width: 400px;">
+
+        <h2>RGB -> Gray Scale</h2>
+        <img src="{{ preProcess_1_path }}" alt="preProcess_1_path" style="max-width: 400px;">
+
+        <h2>Gray Scale -> Thresh </h2>
+        <img src="{{ preProcess_2_path }}" alt="preProcess_2_path" style="max-width: 400px;">
+
+        <h2>Thresh -> Morphological</h2>
+        <img src="{{ morph_path }}" alt="morph_path" style="max-width: 400px;">
+
+
+        <h2>Morphological -> Less Noise</h2>
+        <img src="{{ lessNoise_path }}" alt="lessNoise_path" style="max-width: 400px;">
+
+        <h2>Less Noise --> Contour - ADD ALL CONTOURS IMAGE</h2>
+        <img src="{{ contour_image_url }}" alt="Contour Detection" style="max-width: 400px;">
+
+        {% if grid_detected %}
+            <h2>Board Extracted</h2>
+            <img src="{{ processed_image_url }}" alt="Grid Detection" style="max-width: 400px;">
+
+            <h2>Board Split</h2>
+            <table class="sudoku-table">
+                {% for row in cell_images %}
+                    <tr>
+                        {% for cell_image in row %}
+                            <td>
+                                <img src="{{ cell_image }}" alt="Cell Image">
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <h2>confidence Score For Digits</h2>
+            <table class="confidence-table">
+                {% for row in confidence %}
+                    <tr>
+                        {% for score in row %}
+                            <td>{{ score }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <p class="success-message">{{ message }}</p>
+            <a href="{% url 'game_page' %}" class="button start-game-button">Start Game</a>
+        {% else %}
+            <p class="error-message">{{ message }}</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

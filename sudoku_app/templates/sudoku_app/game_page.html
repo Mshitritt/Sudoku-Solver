@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sudoku Solver - Game</title>
+    {% load static %}
+    {% load grid_tags %}
+    <link rel="stylesheet" href="{% static 'sudoku_app/sudoku_grid.css' %}">
+</head>
+<body>
+
+    <div class="steps-container">
+        <h2>Results - Final Grid Ready to Play</h2>
+
+        <div class="step">
+
+            <table class="final-sudoku-grid" id="sudoku-grid">
+                {% for row_index in 9|grid_range %}
+                <tr>
+                    {% for col_index in 9|grid_range %}
+                    {% with cell_value=digit_grid|get_item:row_index|get_item:col_index %}
+                    {% with detected=detected_grid|get_item:row_index|get_item:col_index %}
+                    <td
+                        contenteditable="{% if not detected and cell_value == 0 %}true{% else %}false{% endif %}"
+                        class="{% if detected %}detected-cell{% else %}editable-cell{% endif %}"
+                    >
+                        {% if cell_value != 0 %}
+                        {{ cell_value }}
+                        {% endif %}
+                    </td>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+
+            <div class="button-container">
+                <button type="button" class="button solve-button" onclick="solveSudoku()">Solve</button>
+                <button type="button" class="button clear-button" onclick="clearSolution()">Clear</button>
+                <button type="button" class="button check-button" onclick="checkUserSolution()">Check Solution</button>
+            </div>
+             <!-- Message Container -->
+            <div id="message-container" class="message-container"></div>
+
+        </div>
+
+
+
+    </div>
+
+    <!-- Pass the grid data to the frontend -->
+    <script>
+        const DIGIT_GRID = {{ grid_data_json|safe }};
+        const DETECTED_GRID = {{ detected_grid_json|safe }};
+        const SOLVED_GRID = {{ solved_grid_json|safe }};
+    </script>
+    <script src="{% static 'sudoku_app/scripts.js' %}"></script>
+
+</body>
+
+</html>

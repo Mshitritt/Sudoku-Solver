@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sudoku Solver - CNN Workflow</title>
+    {% load static %}
+    {% load grid_tags %}
+    <link rel="stylesheet" href="{% static 'sudoku_app/styles_cnn.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <h1>Sudoku Solver - CNN Workflow</h1>
+        <p>Explore the part-by-part process of digit recognition using a Convolutional Neural Network (CNN).</p>
+    </header>
+
+    <section class="workflow">
+        <!-- Full Row Parts -->
+
+        <div class="part">
+            <h2>Input - Extracted Sudoku Grid</h2>
+            <img src="{{ board_path }}" alt="CNN board_path">
+            <p>Given the extracted sudoku grid from previous step (if exist).</p>
+        </div>
+
+        <div class="part">
+            <h2>Board Split</h2>
+            <div class="grid-container">
+                <table class="sudoku-table">
+                    {% for row in cell_images %}
+                    <tr>{% for cell_image in row %}<td><img src="{{ cell_image }}" alt="Cell Image"></td>{% endfor %}</tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <p>The extracted cells from the Sudoku board are displayed as a 9x9 grid for CNN processing.</p>
+        </div>
+
+
+        <div class="steps-container">
+            <h2>Digits Detections</h2>
+            <div class="step">
+                <table class="digits-detection-table">
+                    {% for row_index in 9|grid_range %}
+                    <tr>
+                        {% for col_index in 9|grid_range %}
+                        {% with cell_value=digit_grid|get_item:row_index|get_item:col_index %}
+                        <td>
+                            {% if cell_value != 0 %}
+                            <div class="digit">
+                                <span class="digit-value">{{ cell_value }}</span>
+                                <span class="confidence-label">{{ confidence|get_item:row_index|get_item:col_index }}</span>
+                            </div>
+                            {% else %}
+                            <div class="digit empty-cell"></div>
+
+                            {% endif %}
+                        </td>
+                        {% endwith %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+                <p>This table shows the detected digits along with their confidence scores for each cell in the Sudoku grid.</p>
+            </div>
+             <div class="step">
+                <img src="{{ board_path }}" alt="Sudoku Board">
+                 <p>Original Image Grid.</p>
+             </div>
+        </div>
+
+
+
+        <div class="part distribution-container">
+            <h2>CNN Model - Data</h2>
+            <p>Augmented data.</p>
+
+            <table class="samples-table">
+                {% for digit, image_paths in samples.items %}
+                <tr>
+                    <th>{{ digit }}</th>
+                    {% for image_path in image_paths %}
+                    <td>
+                        <img src="{{ image_path }}" alt="Digit {{ digit }}">
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+
+            <p>Data Distribution</p>
+            <img src="{{ data_dist_path }}" alt="Data Distribution">
+        </div>
+
+
+
+        <div class="part distribution-container">
+            <h2>CNN Model - Training</h2>
+            <p>Loss Graph</p>
+            <img src="{{ train_loss_path }}" alt="train_loss_path Distribution">
+
+            <p>Confusion Matrix</p>
+            <img src="{{ confMatrix_path }}" alt="confMatrix_path">
+
+            <p>Classification Report</p>
+            <div class="classification-report">
+                <pre>{{ classification_report|safe }}</pre>
+            </div>
+
+
+        </div>
+
+        <div class="steps-container">
+            <script src="{% static 'sudoku_app/scripts.js' %}"></script>
+            <h2>Results - Final Grid Ready to Play</h2>
+            <div class="step">
+                <table class="final-sudoku-grid" id="sudoku-grid">
+                    {% for row_index in 9|grid_range %}
+                    <tr>
+                        {% for col_index in 9|grid_range %}
+                        {% with cell_value=digit_grid|get_item:row_index|get_item:col_index %}
+                        <td
+                            contenteditable="true"
+                            class="{% if cell_value != 0 %}detected-cell{% else %}editable-cell{% endif %}"
+                            data-row="{{ row_index }}"
+                            data-col="{{ col_index }}"
+                        >
+                            {% if cell_value != 0 %}
+                            <span class="digit-value">{{ cell_value }}</span>
+                            {% endif %}
+                        </td>
+                        {% endwith %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+                <p>Editable Sudoku Grid.</p>
+            </div>
+            <div class="step">
+                <img src="{{ board_path }}" alt="Sudoku Board">
+                <p>Original Image Grid.</p>
+            </div>
+        </div>
+
+
+        <form id="start-game-form" method="post" action="{% url 'game_page' %}">
+            {% csrf_token %}
+            <input type="hidden" name="grid_data" id="grid-data">
+            <button type="submit" class="button start-game-button">Start Game</button>
+        </form>
+
+    </section>
+
+    <footer class="footer">
+        <p>Created as part of the Introduction to Computer Vision and AI course. Learn more about CNN-based digit recognition and machine learning applications.</p>
+        <p>Created By M&M Company - Matan Shitrit & Meitar Levy.</p>
+    </footer>
+</body>
+</html>

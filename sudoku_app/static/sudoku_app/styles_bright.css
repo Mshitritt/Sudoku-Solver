@@ -1,0 +1,208 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f9;
+}
+
+h1 {
+    color: #333;
+}
+
+form {
+    margin-top: 20px;
+}
+.sudoku-grid {
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 4px solid #333; /* Outer border */
+}
+
+.sudoku-grid td {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #888;
+    text-align: center;
+    font-size: 18px;
+    background-color: #f4f4f9;
+}
+
+/* Add thicker borders for 3x3 squares */
+.sudoku-grid td:nth-child(3n) {
+    border-right: 4px solid #333;
+}
+
+.sudoku-grid tr:nth-child(3n) td {
+    border-bottom: 4px solid #333;
+}
+
+/* Add thicker left border */
+.sudoku-grid td:nth-child(1) {
+    border-left: 4px solid #333;
+}
+
+/* Add thicker top border */
+.sudoku-grid tr:nth-child(1) td {
+    border-top: 4px solid #333;
+}
+
+/* Detected and Solved Cell Styles */
+.detected-cell {
+    background-color: #d9f0d8; /* Light green for detected */
+    font-weight: bold;
+}
+
+.solved-cell {
+    background-color: #ffffff;
+    color: #333;
+    font-weight: normal;
+}
+
+.error-cell {
+    font-weight: bold;
+    color: #b00;
+    background-color: #fdd;
+}
+
+/* Button Styles */
+.button {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+/* Solve Button */
+.solve-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.solve-button:hover {
+    background-color: #45a049;
+}
+
+.solve-button:active {
+    transform: scale(0.95);
+}
+
+/* Check Button */
+.check-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.check-button:hover {
+    background-color: #0056b3;
+}
+
+.check-button:active {
+    transform: scale(0.95);
+}
+
+/* Clear Button */
+.clear-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.clear-button:hover {
+    background-color: #d32f2f;
+}
+
+.clear-button:active {
+    transform: scale(0.95);
+}
+
+@keyframes bounce {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.05); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+.button:active {
+    animation: bounce 0.2s;
+}
+
+.editable-cell {
+    background-color: #fdfd96; /* Light yellow */
+    font-weight: normal;
+}
+
+/* Correctly Filled Cells */
+.correct-cell {
+    background-color: #c8e6c9; /* Light green */
+    font-weight: bold;
+}
+
+/* Incorrectly Filled Cells */
+.wrong-cell {
+    background-color: #f8d7da; /* Light red */
+    color: #721c24;
+    font-weight: bold;
+}
+
+.upload-button {
+    background-color: #4CAF50;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.start-game-button {
+    background-color: #007bff;
+    color: white;
+    margin-top: 15px;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    text-align: center;
+}
+
+.success-message {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.sudoku-table {
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.sudoku-table td {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+}
+.sudoku-table img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.confidence-table td {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+    color: #333;
+}
+

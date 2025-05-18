@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sudoku Solver - Workflow Demonstration</title>
+    {% load static %}
+    {% load grid_tags %}
+    <link rel="stylesheet" href="{% static 'sudoku_app/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <h1>Sudoku Solver - Computer Vision Workflow</h1>
+        <p>Explore the step-by-step process of extracting a Sudoku board from an image using computer vision techniques.</p>
+    </header>
+
+    <section class="workflow">
+        <!-- Full Row Upload Section -->
+        <div class="upload-step">
+            <h2>Upload Sudoku Image</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" name="upload" class="button upload-button">Upload</button>
+            </form>
+        </div>
+
+        <!-- Steps Grid -->
+        {% if image_url %}
+        <div class="steps-container">
+            <div class="step">
+                <h2>Step 1: Uploaded Image</h2>
+                <img src="{{ image_url }}" alt="Uploaded Sudoku">
+                <p>This is the raw image uploaded by the user. It will undergo several transformations to extract the Sudoku grid.</p>
+            </div>
+
+            <div class="step">
+                <h2>Step 2: Grayscale + Blur</h2>
+                <img src="{{ preProcess_1_path }}" alt="Gray Scale">
+                <p>The image is converted to grayscale to simplify further processing and reduce computational cost.</p>
+            </div>
+
+            <div class="step">
+                <h2>Step 3: Canny Edge</h2>
+                <img src="{{ canny_path }}" alt="Less Noise">
+                <p>Canny edge detection highlights object boundaries by detecting intensity changes, improving contour accuracy for precise shape extraction.</p>
+            </div>
+
+            <div class="step">
+                <h2>Step 4: All Contours</h2>
+                <img src="{{ allContours_path }}" alt="Morphological">
+                <p>Finding all the object's contours.</p>
+            </div>
+
+            <div class="step">
+                <h2>Step 5: Contour Selection</h2>
+                <img src="{{ contour_image_url }}" alt="Contour Detection">
+                <p>Selected largest contour with 4 corners with rough square shape.</p>
+
+            </div>
+
+
+        </div>
+        {% endif %}
+
+        {% if grid_detected %}
+        <div class="step result-step">
+            <h2>Result: Extracted Board</h2>
+            <img src="{{ processed_image_url }}" alt="Grid Detection">
+            <p>The final extracted Sudoku grid, ready for digit recognition and solving.</p>
+
+
+            <p class="success-message">{{ message }}</p>
+            <a href="{% url 'cnn_workflow' %}" class="button start-game-button">Detect Digits</a>
+        </div>
+
+        {% endif %}
+
+
+    </section>
+
+    <footer class="footer">
+        <p>Created as part of the Introduction to Computer Vision and AI course. Learn more about computer vision projects and real-world applications.</p>
+        <p>Created By M&M Company - Matan Shitrit & Meitar Levy.</p>
+    </footer>
+</body>
+</html>

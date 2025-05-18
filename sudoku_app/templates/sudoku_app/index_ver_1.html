@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sudoku Solver</title>
+    {% load grid_tags %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'sudoku_app/styles.css' %}">
+</head>
+<body>
+    <h1>Welcome to the Sudoku Solver</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="upload">Upload</button>
+    </form>
+
+    {% if image_url %}
+        <h2>Uploaded Image</h2>
+        <img src="{{ image_url }}" alt="Uploaded Sudoku" style="max-width: 400px;">
+        <h2>Contour Detection</h2>
+        <img src="{{ contour_img_url }}" alt="Contour Detection" style="max-width: 400px;">
+        <h2>Sudoku Board</h2>
+        <img src="{{ processed_image_url }}" alt="Sudoku Board" style="max-width: 400px;">
+
+    {% endif %}
+
+{% if digit_grid %}
+    <h2>Detected Digits</h2>
+    <form id="solve-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="digit_grid" value="{{ grid_json }}">
+        <input type="hidden" name="detected_grid" value="{{ detected_json }}">
+        <input type="hidden" name="image_url" value="{{ image_url }}">
+        <input type="hidden" name="processed_image_url" value="{{ processed_image_url }}">
+
+        <table class="sudoku-grid" id="sudoku-grid">
+            {% for row_index in 9|grid_range %}
+            <tr>
+                {% for col_index in 9|grid_range %}
+                {% with cell_value=digit_grid|get_item:row_index|get_item:col_index %}
+                <td
+                    class="{% if cell_value == -1 %}error-cell{% elif detected_grid|get_item:row_index|get_item:col_index %}detected-cell{% else %}solved-cell{% endif %}"
+                >
+                    {% if cell_value == -1 %}
+                        ?
+                    {% elif cell_value == 0 %}
+                        <!-- Empty cell, print nothing -->
+                    {% else %}
+                        {{ cell_value }}
+                    {% endif %}
+                </td>
+                {% endwith %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+
+        <button type="button" class="button solve-button" onclick="solveSudoku()">Solve</button>
+        <button type="button" class="button clear-button" onclick="clearSolution()">Clear</button>
+
+    </form>
+
+    <script>
+        function solveSudoku() {
+        const formData = new FormData(document.getElementById("solve-form"));
+        fetch("{% url 'solve_grid' %}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.digit_grid) {
+                const grid = data.digit_grid;
+                const table = document.getElementById("sudoku-grid");
+
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        const cell = table.rows[i].cells[j];
+                        const digit = grid[i][j];
+
+                        // Preserve detected cells
+                        if (cell.classList.contains("detected-cell")) {
+                            continue;
+                        }
+
+                        // Update solved cells
+                        if (digit == -1) {
+                            cell.textContent = "?";  // Undetected cell
+                            cell.className = "error-cell";
+                        } else if (digit != 0) {
+                            cell.textContent = digit;
+                            cell.className = "solved-cell";
+                        } else {
+                            cell.textContent = "";
+                            cell.className = "";
+                        }
+                    }
+                }
+            }
+        })
+        .catch(error => console.error("Error solving grid:", error));
+    }
+
+        function clearSolution() {
+        const table = document.getElementById("sudoku-grid");
+        const digitGrid = JSON.parse(document.querySelector("input[name='digit_grid']").value);
+        const detectedGrid = JSON.parse(document.querySelector("input[name='detected_grid']").value);
+
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                const cell = table.rows[i].cells[j];
+                const digit = digitGrid[i][j];
+
+                // Only clear non-detected cells
+                if (!detectedGrid[i][j]) {
+                    if (digit == -1) {
+                        cell.textContent = "?";
+                        cell.className = "error-cell";
+                    } else if (digit == 0) {
+                        cell.textContent = "";
+                        cell.className = "";
+                    } else {
+                        cell.textContent = digit;
+                        cell.className = "solved-cell";
+                    }
+                }
+            }
+        }
+    }
+    </script>
+{% endif %}
+
+
+</body>
+</html>
