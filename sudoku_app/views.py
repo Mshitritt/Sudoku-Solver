@@ -132,7 +132,7 @@ def cnn_workflow(request):
             samples[digit] = []
             for img_file in sorted(os.listdir(digit_dir))[:10]:
                 # Use forward slashes for client-side compatibility
-                img_path = f"{sample_dir_final.replace('\\', '/')}/{str(digit)}/{img_file}"
+                img_path = os.path.join(sample_dir_final, str(digit), img_file).replace("\\", "/")
                 samples[digit].append(img_path)
 
     EXTRACTED_DATA['samples'] = samples
