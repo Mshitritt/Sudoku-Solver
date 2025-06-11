@@ -1,5 +1,5 @@
 # 🧠 Sudoku Solver – AI-Powered Puzzle Solver  
-_Final Project – Algorithms on Multimedia (Intro to AI)_
+_Final Project – Algorithms on Multimedia_
 
 ## 📌 Project Overview
 
