@@ -1,5 +1,6 @@
-# 🧠 Sudoku Solver – AI-Powered Puzzle Solver  
+# 🧠 Sudoku Solver – Computer Vision Puzzle Solver  
 _Final Project – Algorithms on Multimedia_
+_Demonstration Video: https://youtu.be/TtWKO3E_rdE_
 
 ## 📌 Project Overview
 
