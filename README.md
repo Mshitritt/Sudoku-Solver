@@ -1,11 +1,11 @@
 # 🧠 Sudoku Solver – Computer Vision Puzzle Solver  
 _Final Project – Algorithms on Multimedia_
-_Demonstration Video: https://youtu.be/TtWKO3E_rdE_
+
 
 ## 📌 Project Overview
 
 Sudoku Solver is an end-to-end AI-based system that solves Sudoku puzzles from images. Created as a final project for the **Algorithms on Multimedia** course, this project integrates computer vision, deep learning (CNN), and classic AI search algorithms.
-
+**Demonstration Video:** https://youtu.be/TtWKO3E_rdE
 ### 🔍 Key Features
 
 - Detects and extracts the Sudoku grid from an image
