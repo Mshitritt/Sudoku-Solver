@@ -43,7 +43,23 @@ Sudoku Solver is an end-to-end AI-based system that solves Sudoku puzzles from i
 - Let users edit and verify manually
 
 ---
+## ✨ Demo  
+### Input images  
+<p align="left">
+  <img src="./demo_images/input.jpg" alt="Input 1" width="50%"/>
+</p>
 
+### Canny Edge 
+<p align="left">
+  <img src="./demo_images/canny.png" alt="Input 1" width="50%"/>
+</p>
+
+### Find Contour
+<p align="left">
+  <img src="./demo_images/contour.png" alt="Input 1" width="50%"/>
+</p>
+
+---
 ## 🚀 Setup Instructions
 
 ```bash
